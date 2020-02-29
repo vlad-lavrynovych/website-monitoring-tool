@@ -6,6 +6,7 @@ import java.util.Objects;
 public class ConfigEntity implements Serializable {
     private static final long serialVersionUID = -143068844559486110L;
     private Long id;
+    private String url;
     // all intervals are in millis
     private Integer queryingInterval;
     private Integer responseTimeOk;
@@ -22,82 +23,85 @@ public class ConfigEntity implements Serializable {
     public ConfigEntity() {
     }
 
-    public ConfigEntity(Long id, Integer queryingInterval, Integer responseTimeOk, Integer responseTimeWarning, Integer responseTimeCritical, Integer expectedHttpResponseCode, Integer minExpectedResponseSize, Integer maxExpectedResponseSize
-//            , String expectedSubstringInResponse
-    ) {
-        this.id = id;
-        this.queryingInterval = queryingInterval;
-        this.responseTimeOk = responseTimeOk;
-        this.responseTimeWarning = responseTimeWarning;
-        this.responseTimeCritical = responseTimeCritical;
-        this.expectedHttpResponseCode = expectedHttpResponseCode;
-        this.minExpectedResponseSize = minExpectedResponseSize;
-        this.maxExpectedResponseSize = maxExpectedResponseSize;
-//        this.expectedSubstringInResponse = expectedSubstringInResponse;
+    public String getUrl() {
+        return url;
+    }
+
+    public ConfigEntity setUrl(String url) {
+        this.url = url;
+        return this;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public ConfigEntity setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Integer getQueryingInterval() {
         return queryingInterval;
     }
 
-    public void setQueryingInterval(Integer queryingInterval) {
+    public ConfigEntity setQueryingInterval(Integer queryingInterval) {
         this.queryingInterval = queryingInterval;
+        return this;
     }
 
     public Integer getResponseTimeOk() {
         return responseTimeOk;
     }
 
-    public void setResponseTimeOk(Integer responseTimeOk) {
+    public ConfigEntity setResponseTimeOk(Integer responseTimeOk) {
         this.responseTimeOk = responseTimeOk;
+        return this;
     }
 
     public Integer getResponseTimeWarning() {
         return responseTimeWarning;
     }
 
-    public void setResponseTimeWarning(Integer responseTimeWarning) {
+    public ConfigEntity setResponseTimeWarning(Integer responseTimeWarning) {
         this.responseTimeWarning = responseTimeWarning;
+        return this;
     }
 
     public Integer getResponseTimeCritical() {
         return responseTimeCritical;
     }
 
-    public void setResponseTimeCritical(Integer responseTimeCritical) {
+    public ConfigEntity setResponseTimeCritical(Integer responseTimeCritical) {
         this.responseTimeCritical = responseTimeCritical;
+        return this;
     }
 
     public Integer getExpectedHttpResponseCode() {
         return expectedHttpResponseCode;
     }
 
-    public void setExpectedHttpResponseCode(Integer expectedHttpResponseCode) {
+    public ConfigEntity setExpectedHttpResponseCode(Integer expectedHttpResponseCode) {
         this.expectedHttpResponseCode = expectedHttpResponseCode;
+        return this;
     }
 
     public Integer getMinExpectedResponseSize() {
         return minExpectedResponseSize;
     }
 
-    public void setMinExpectedResponseSize(Integer minExpectedResponseSize) {
+    public ConfigEntity setMinExpectedResponseSize(Integer minExpectedResponseSize) {
         this.minExpectedResponseSize = minExpectedResponseSize;
+        return this;
     }
 
     public Integer getMaxExpectedResponseSize() {
         return maxExpectedResponseSize;
     }
 
-    public void setMaxExpectedResponseSize(Integer maxExpectedResponseSize) {
+    public ConfigEntity setMaxExpectedResponseSize(Integer maxExpectedResponseSize) {
         this.maxExpectedResponseSize = maxExpectedResponseSize;
+        return this;
     }
 
 
@@ -105,10 +109,26 @@ public class ConfigEntity implements Serializable {
         return monitored;
     }
 
-    public void setMonitored(Boolean monitored) {
+    public ConfigEntity setMonitored(Boolean monitored) {
         this.monitored = monitored;
+        return this;
     }
 
+    @Override
+    public String toString() {
+        return "ConfigEntity{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", queryingInterval=" + queryingInterval +
+                ", responseTimeOk=" + responseTimeOk +
+                ", responseTimeWarning=" + responseTimeWarning +
+                ", responseTimeCritical=" + responseTimeCritical +
+                ", expectedHttpResponseCode=" + expectedHttpResponseCode +
+                ", minExpectedResponseSize=" + minExpectedResponseSize +
+                ", maxExpectedResponseSize=" + maxExpectedResponseSize +
+                ", monitored=" + monitored +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -116,17 +136,19 @@ public class ConfigEntity implements Serializable {
         if (!(o instanceof ConfigEntity)) return false;
         ConfigEntity that = (ConfigEntity) o;
         return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getUrl(), that.getUrl()) &&
                 Objects.equals(getQueryingInterval(), that.getQueryingInterval()) &&
                 Objects.equals(getResponseTimeOk(), that.getResponseTimeOk()) &&
                 Objects.equals(getResponseTimeWarning(), that.getResponseTimeWarning()) &&
                 Objects.equals(getResponseTimeCritical(), that.getResponseTimeCritical()) &&
                 Objects.equals(getExpectedHttpResponseCode(), that.getExpectedHttpResponseCode()) &&
                 Objects.equals(getMinExpectedResponseSize(), that.getMinExpectedResponseSize()) &&
-                Objects.equals(getMaxExpectedResponseSize(), that.getMaxExpectedResponseSize());
+                Objects.equals(getMaxExpectedResponseSize(), that.getMaxExpectedResponseSize()) &&
+                Objects.equals(monitored, that.monitored);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getQueryingInterval(), getResponseTimeOk(), getResponseTimeWarning(), getResponseTimeCritical(), getExpectedHttpResponseCode(), getMinExpectedResponseSize(), getMaxExpectedResponseSize());
+        return Objects.hash(getId(), getUrl(), getQueryingInterval(), getResponseTimeOk(), getResponseTimeWarning(), getResponseTimeCritical(), getExpectedHttpResponseCode(), getMinExpectedResponseSize(), getMaxExpectedResponseSize(), monitored);
     }
 }

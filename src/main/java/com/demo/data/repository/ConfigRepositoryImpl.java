@@ -27,6 +27,7 @@ public class ConfigRepositoryImpl implements ConfigRepository {
                 configEntity.setId(preparedStatement.getGeneratedKeys().getLong(1));
                 result = Optional.of(configEntity);
             }
+            logger.info("Config saved successfully, id :: {}", configEntity.getId());
         } catch (SQLException ex) {
             logger.error("Error during inserting new config", ex);
         }
@@ -39,7 +40,7 @@ public class ConfigRepositoryImpl implements ConfigRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_MONITORING_STATUS.getQuery())) {
 
             getPSUpdateMonitoringStatus(preparedStatement, id, monitoringStatus).executeUpdate();
-
+            logger.info("Monitoring status updated successfully, id :: {}", id);
         } catch (SQLException ex) {
             logger.error("Error during updating monitoring status", ex);
         }
@@ -51,7 +52,7 @@ public class ConfigRepositoryImpl implements ConfigRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID.getQuery())) {
 
             getPSDelete(preparedStatement, id).executeUpdate();
-
+            logger.info("Config deleted successfully, id :: {}", id);
         } catch (SQLException ex) {
             logger.error("Error during updating monitoring status", ex);
         }
@@ -81,14 +82,15 @@ public class ConfigRepositoryImpl implements ConfigRepository {
     }
 
     private PreparedStatement getPSUpdateConfig(PreparedStatement preparedStatement, ConfigEntity config) throws SQLException {
-        preparedStatement.setLong(1, config.getQueryingInterval());
-        preparedStatement.setLong(2, config.getResponseTimeOk());
-        preparedStatement.setLong(3, config.getResponseTimeWarning());
-        preparedStatement.setLong(4, config.getResponseTimeCritical());
-        preparedStatement.setInt(5, config.getExpectedHttpResponseCode());
-        preparedStatement.setInt(6, config.getMinExpectedResponseSize());
-        preparedStatement.setInt(7, config.getMaxExpectedResponseSize());
-        preparedStatement.setBoolean(8, config.isMonitored());
+        preparedStatement.setString(1, config.getUrl());
+        preparedStatement.setLong(2, config.getQueryingInterval());
+        preparedStatement.setLong(3, config.getResponseTimeOk());
+        preparedStatement.setLong(4, config.getResponseTimeWarning());
+        preparedStatement.setLong(5, config.getResponseTimeCritical());
+        preparedStatement.setInt(6, config.getExpectedHttpResponseCode());
+        preparedStatement.setInt(7, config.getMinExpectedResponseSize());
+        preparedStatement.setInt(8, config.getMaxExpectedResponseSize());
+        preparedStatement.setBoolean(9, config.isMonitored());
         return preparedStatement;
     }
 
@@ -100,17 +102,17 @@ public class ConfigRepositoryImpl implements ConfigRepository {
 
     private ConfigEntity mapResultSetToConfigEntity(ResultSet rs) throws SQLException {
         if (rs.next()) {
-            ConfigEntity configEntity = new ConfigEntity();
-            configEntity.setId(rs.getLong(1));
-            configEntity.setQueryingInterval(rs.getInt(2));
-            configEntity.setResponseTimeOk(rs.getInt(3));
-            configEntity.setResponseTimeWarning(rs.getInt(4));
-            configEntity.setResponseTimeCritical(rs.getInt(5));
-            configEntity.setExpectedHttpResponseCode(rs.getInt(6));
-            configEntity.setMinExpectedResponseSize(rs.getInt(7));
-            configEntity.setMaxExpectedResponseSize(rs.getInt(8));
-            configEntity.setMonitored(rs.getBoolean(9));
-            return configEntity;
+            return new ConfigEntity()
+                    .setId(rs.getLong(1))
+                    .setUrl(rs.getString(2))
+                    .setQueryingInterval(rs.getInt(3))
+                    .setResponseTimeOk(rs.getInt(4))
+                    .setResponseTimeWarning(rs.getInt(5))
+                    .setResponseTimeCritical(rs.getInt(6))
+                    .setExpectedHttpResponseCode(rs.getInt(7))
+                    .setMinExpectedResponseSize(rs.getInt(8))
+                    .setMaxExpectedResponseSize(rs.getInt(9))
+                    .setMonitored(rs.getBoolean(10));
         }
         return null;
     }

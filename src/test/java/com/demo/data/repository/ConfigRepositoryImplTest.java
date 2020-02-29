@@ -13,6 +13,7 @@ class ConfigRepositoryImplTest {
     @BeforeAll
     static void init() {
         configEntity = new ConfigEntity();
+        configEntity.setUrl("localhost:8080/");
         configEntity.setQueryingInterval(2000);
         configEntity.setResponseTimeOk(2000);
         configEntity.setResponseTimeWarning(3000);
