@@ -1,6 +1,7 @@
 package com.demo.data.repository;
 
 import com.demo.data.domain.ConfigEntity;
+import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +12,14 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.demo.data.ConnectionPool.getConnection;
-import static com.demo.data.queries.QueriesEnum.*;
+import static com.demo.data.enums.QueriesEnum.*;
 
 public class ConfigRepositoryImpl implements ConfigRepository {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(ConfigRepositoryImpl.class);
+
+    static {
+        BasicConfigurator.configure();
+    }
 
     @Override
     public Optional<ConfigEntity> save(ConfigEntity configEntity) {

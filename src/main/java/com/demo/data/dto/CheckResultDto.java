@@ -1,48 +1,36 @@
 package com.demo.data.dto;
 
-import java.util.Date;
+import com.demo.data.enums.StatusEnum;
+
 import java.util.Objects;
 
 public class CheckResultDto {
-    private Long configId;
-    private String serviceName;
-    private Date lastCheck;
-    private Integer duration;
+    private StatusEnum status;
     private String details;
 
     public CheckResultDto() {
     }
 
-    public Long getConfigId() {
-        return configId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckResultDto)) return false;
+        CheckResultDto that = (CheckResultDto) o;
+        return getStatus() == that.getStatus() &&
+                getDetails().equals(that.getDetails());
     }
 
-    public void setConfigId(Long configId) {
-        this.configId = configId;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStatus(), getDetails());
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public StatusEnum getStatus() {
+        return status;
     }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
-    public Date getLastCheck() {
-        return lastCheck;
-    }
-
-    public void setLastCheck(Date lastCheck) {
-        this.lastCheck = lastCheck;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
+    public void setStatus(StatusEnum status) {
+        this.status = status;
     }
 
     public String getDetails() {
@@ -51,35 +39,5 @@ public class CheckResultDto {
 
     public void setDetails(String details) {
         this.details = details;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CheckResultDto)) return false;
-        CheckResultDto that = (CheckResultDto) o;
-        return Objects.equals(getConfigId(), that.getConfigId()) &&
-                Objects.equals(getServiceName(), that.getServiceName()) &&
-                Objects.equals(getLastCheck(), that.getLastCheck()) &&
-                Objects.equals(getDuration(), that.getDuration()) &&
-                Objects.equals(getDetails(), that.getDetails());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getConfigId(), getServiceName(), getLastCheck(), getDuration(), getDetails());
-    }
-
-
-    @Override
-    public String toString() {
-        return "CheckResultDto{" +
-                "configId=" + configId +
-                ", serviceName='" + serviceName + '\'' +
-                ", lastCheck=" + lastCheck +
-                ", duration=" + duration +
-                ", details='" + details + '\'' +
-                '}';
     }
 }

@@ -1,4 +1,4 @@
-package com.demo.data.queries;
+package com.demo.data.enums;
 
 public enum QueriesEnum {
     INSERT_CONFIG("INSERT INTO configs (\"url\", \"querying_interval\"," +

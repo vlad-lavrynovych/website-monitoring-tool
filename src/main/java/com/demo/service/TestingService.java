@@ -1,7 +1,8 @@
 package com.demo.service;
 
-import com.demo.data.dto.CheckResultDto;
+import com.demo.data.domain.ConfigEntity;
+import com.demo.data.dto.ConfigCheckInfoDto;
 
 public interface TestingService {
-    CheckResultDto execute();
+    ConfigCheckInfoDto performCheck(ConfigEntity configEntity);
 }
