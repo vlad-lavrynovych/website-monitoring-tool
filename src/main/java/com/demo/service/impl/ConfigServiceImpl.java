@@ -22,6 +22,11 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
+    public ConfigEntity getConfigById(long configId) {
+        return configRepository.findById(configId).orElse(null);
+    }
+
+    @Override
     public void deleteConfig(long id) {
         configRepository.delete(id);
     }

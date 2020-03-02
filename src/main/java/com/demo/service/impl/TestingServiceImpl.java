@@ -1,9 +1,10 @@
 package com.demo.service.impl;
 
+import com.demo.data.domain.CheckResultsEntity;
 import com.demo.data.domain.ConfigEntity;
 import com.demo.data.dto.CheckResultDto;
-import com.demo.data.dto.ConfigCheckInfoDto;
 import com.demo.data.enums.StatusEnum;
+import com.demo.service.ConfigService;
 import com.demo.service.TestingService;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
@@ -21,13 +22,15 @@ import java.util.regex.Pattern;
 
 public class TestingServiceImpl implements TestingService {
     private static Logger logger = LoggerFactory.getLogger(TestingServiceImpl.class);
+    private ConfigService configService = new ConfigServiceImpl();
 
     static {
         BasicConfigurator.configure();
     }
 
     @Override
-    public ConfigCheckInfoDto performCheck(ConfigEntity config) {
+    public CheckResultsEntity performCheck(long configId) {
+        ConfigEntity config = configService.getConfigById(configId);
         HttpURLConnection conn;
         List<CheckResultDto> results;
         long startTime;
@@ -57,11 +60,11 @@ public class TestingServiceImpl implements TestingService {
             }
             results = getResults(config, code, duration, size);
         }
-        ConfigCheckInfoDto configCheckInfoDto = mapResultsToResponse(results, config);
-        configCheckInfoDto.setDuration(duration);
-        configCheckInfoDto.setResponseCode(code);
-        configCheckInfoDto.setResponseSize(size);
-        return configCheckInfoDto;
+        CheckResultsEntity checkResultsEntity = mapResultsToResponse(results, config);
+        checkResultsEntity.setDuration(duration);
+        checkResultsEntity.setResponseCode(code);
+        checkResultsEntity.setResponseSize(size);
+        return checkResultsEntity;
     }
 
     private List<CheckResultDto> getResults(ConfigEntity config, int code, long duration, int size) {
@@ -115,17 +118,16 @@ public class TestingServiceImpl implements TestingService {
         return checkResultDto;
     }
 
-    private ConfigCheckInfoDto mapResultsToResponse(List<CheckResultDto> list, ConfigEntity configEntity) {
-        ConfigCheckInfoDto configCheckInfoDto = new ConfigCheckInfoDto();
-        configCheckInfoDto.setId(configEntity.getId());
-        configCheckInfoDto.setQueryingInterval(configEntity.getQueryingInterval());
-        configCheckInfoDto.setLastCheck(new Date());
-        configCheckInfoDto.setUrl(configEntity.getUrl());
-        configCheckInfoDto.setMonitored(configEntity.isMonitored());
+    private CheckResultsEntity mapResultsToResponse(List<CheckResultDto> list, ConfigEntity configEntity) {
+        CheckResultsEntity checkResultsEntity = new CheckResultsEntity();
+        checkResultsEntity.setId(configEntity.getId());
+        checkResultsEntity.setLastCheck(new Date());
+        checkResultsEntity.setUrl(configEntity.getUrl());
+        checkResultsEntity.setMonitored(configEntity.isMonitored());
 
         StringBuilder description = new StringBuilder();
         String status = getGeneralStatus(list);
-        configCheckInfoDto.setStatus(status);
+        checkResultsEntity.setStatus(status);
 
         list.forEach(s -> {
             if (!s.getStatus().equals(StatusEnum.OK)) {
@@ -134,12 +136,12 @@ public class TestingServiceImpl implements TestingService {
         });
 
         if (description.toString().isEmpty()) {
-            configCheckInfoDto.setDetails("Site is available");
+            checkResultsEntity.setDetails("Site is available");
         } else {
-            configCheckInfoDto.setDetails(description.toString());
+            checkResultsEntity.setDetails(description.toString());
         }
 
-        return configCheckInfoDto;
+        return checkResultsEntity;
     }
 
     private String getGeneralStatus(List<CheckResultDto> list) {

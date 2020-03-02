@@ -54,7 +54,7 @@ public class ConfigRepositoryImpl implements ConfigRepository {
     @Override
     public void delete(Long id) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID.getQuery())) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CONFIG_BY_ID.getQuery())) {
 
             getPSDelete(preparedStatement, id).executeUpdate();
             logger.info("Config deleted successfully, id :: {}", id);
@@ -67,7 +67,7 @@ public class ConfigRepositoryImpl implements ConfigRepository {
     public Optional<ConfigEntity> findById(long id) {
         ConfigEntity configEntity = null;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID.getQuery())) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CONFIG__BY_ID.getQuery())) {
             ResultSet rs = getPSFindById(preparedStatement, id).executeQuery();
             configEntity = mapResultSetToConfigEntity(rs);
         } catch (SQLException ex) {

@@ -1,4 +1,4 @@
-<%@ page import="com.demo.data.dto.ConfigCheckInfoDto" %>
+<%@ page import="com.demo.data.domain.CheckResultsEntity" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
@@ -7,10 +7,30 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <LINK REL="StyleSheet" HREF="<%=request.getContextPath()%>/css/bootstrap.css" TYPE="text/css">
-
+    <meta http-equiv="REFRESH" content="10;url=/app/app">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+<script>
+    function soundCritical() {
+        var audio = document.createElement("audio");
+        audio.src = "sounds/warning.mp3";
+        audio.addEventListener("ended", function () {
+            document.removeChild(this);
+        }, false);
+        audio.play();
+    }
+
+    function soundWarning() {
+        var audio = document.createElement("audio");
+        audio.src = "sounds/warning.mp3";
+        audio.addEventListener("ended", function () {
+            document.removeChild(this);
+        }, false);
+        audio.play();
+    }
+
+</script>
 <div class="navbar navbar-dark bg-dark d-flex justify-content-center align-items-center">
     <h1 class="text-white">Website Monitoring Tool</h1>
 </div>
@@ -31,12 +51,23 @@
             <th>Monitoring status</th>
         </tr>
         </thead>
-        <%
-            List<ConfigCheckInfoDto> list = (List<ConfigCheckInfoDto>) request.getSession().getAttribute("data");
-            if (list != null && !list.isEmpty()) {
+        <% response.setIntHeader("Refresh", 15);
+            List<CheckResultsEntity> data = (List<CheckResultsEntity>) request.getSession().getAttribute("data");
+            if (data != null && !data.isEmpty()) {
         %>
         <tbody>
-        <%for (ConfigCheckInfoDto e : list) { %>
+        <%
+            for (CheckResultsEntity e : data) {
+                if (e.getStatus().equals("CRITICAL")) {
+        %>
+        <script>soundCritical()</script>
+        <%
+        } else if (e.getStatus().equals("WARNING")) {
+        %>
+        <script>soundWarning()</script>
+        <%
+            }
+        %>
         <tr>
             <th><%out.println(e.getUrl());%></th>
             <th class="<%

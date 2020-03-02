@@ -9,4 +9,6 @@ public interface RequestService {
     void processDeletingRequest(HttpServletRequest request, HttpServletResponse response, long configId);
 
     void processChangeMonitoringStatusRequest(HttpServletRequest req, HttpServletResponse resp, long value);
+
+    void processRefreshRequest(HttpServletRequest req, HttpServletResponse resp);
 }

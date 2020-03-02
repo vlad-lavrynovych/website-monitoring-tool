@@ -11,4 +11,6 @@ public interface ConfigService {
     ConfigEntity addNewConfig(Map<String, String[]> parameters);
 
     void updateMonitoringStatus(long id, boolean status);
+
+    ConfigEntity getConfigById(long configId);
 }
