@@ -1,4 +1,4 @@
-package com.demo.service;
+package com.demo.testing;
 
 import com.demo.data.domain.CheckResultsEntity;
 

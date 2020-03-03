@@ -7,14 +7,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <LINK REL="StyleSheet" HREF="<%=request.getContextPath()%>/css/bootstrap.css" TYPE="text/css">
-    <meta http-equiv="REFRESH" content="10;url=/app/app">
+    <meta http-equiv="REFRESH" content="40;url=/app/app">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <script>
     function soundCritical() {
         var audio = document.createElement("audio");
-        audio.src = "sounds/warning.mp3";
+        audio.src = "sounds/critical.mp3";
         audio.addEventListener("ended", function () {
             document.removeChild(this);
         }, false);
@@ -51,22 +51,22 @@
             <th>Monitoring status</th>
         </tr>
         </thead>
-        <% response.setIntHeader("Refresh", 15);
+        <%
             List<CheckResultsEntity> data = (List<CheckResultsEntity>) request.getSession().getAttribute("data");
             if (data != null && !data.isEmpty()) {
-        %>
-        <tbody>
-        <%
-            for (CheckResultsEntity e : data) {
-                if (e.getStatus().equals("CRITICAL")) {
+                if (data.stream().anyMatch(s -> s.getStatus().equals("CRITICAL"))) {
         %>
         <script>soundCritical()</script>
         <%
-        } else if (e.getStatus().equals("WARNING")) {
+        } else if (data.stream().anyMatch(s -> s.getStatus().equals("WARNING"))) {
         %>
         <script>soundWarning()</script>
         <%
             }
+        %>
+        <tbody>
+        <%
+            for (CheckResultsEntity e : data) {
         %>
         <tr>
             <th><%out.println(e.getUrl());%></th>

@@ -2,7 +2,13 @@ package com.demo.service.impl;
 
 import com.demo.data.domain.CheckResultsEntity;
 import com.demo.data.domain.ConfigEntity;
-import com.demo.service.*;
+import com.demo.service.CheckResultsService;
+import com.demo.service.ConfigService;
+import com.demo.service.RequestService;
+import com.demo.testing.TestingService;
+import com.demo.testing.TimerService;
+import com.demo.testing.impl.TestingServiceImpl;
+import com.demo.testing.impl.TimerServiceImpl;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,14 +16,13 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RequestServiceImpl implements RequestService {
     private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
     private ConfigService configService = new ConfigServiceImpl();
 
-    // FIXME: 02.03.2020 WHEN DELETE CONFIG STILL GET RESULT FROM DATABASE12
     static {
         BasicConfigurator.configure();
     }
@@ -29,16 +34,11 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void processCreatingRequest(HttpServletRequest request, HttpServletResponse response) {
-        ConfigEntity configEntity = configService.addNewConfig(request.getParameterMap());
-        List<CheckResultsEntity> data = ((List<CheckResultsEntity>) request.getSession().getAttribute("data"));
-        if (data == null) {
-            data = new ArrayList<>();
-        }
+        ConfigEntity configEntity = configService.addNewConfig(mapParametersToConfigEntity(request.getParameterMap()));
         checkResultsService.addResult(testingService.performCheck(configEntity.getId()));
         List<CheckResultsEntity> list = checkResultsService.findAll();
-        data.addAll(list);
         timerService.runTimer(configEntity.getId(), configEntity.getQueryingInterval());
-        request.getSession().setAttribute("data", data);
+        request.getSession().setAttribute("data", list);
         try {
             response.sendRedirect("/app");
         } catch (IOException e) {
@@ -50,6 +50,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public void processDeletingRequest(HttpServletRequest request, HttpServletResponse response, long configId) {
         configService.deleteConfig(configId);
+        checkResultsService.deleteById(configId);
         List<CheckResultsEntity> list = (List<CheckResultsEntity>) request.getSession().getAttribute("data");
         list.remove(list.stream().filter(s -> s.getId() == configId).findFirst().get());
         request.setAttribute("data", list);
@@ -86,5 +87,17 @@ public class RequestServiceImpl implements RequestService {
         } catch (IOException e) {
             logger.error("Redirection error ", e);
         }
+    }
+
+    private ConfigEntity mapParametersToConfigEntity(Map<String, String[]> parameters) {
+        return new ConfigEntity()
+                .setUrl(parameters.get("url")[0])
+                .setQueryingInterval(Integer.valueOf(parameters.get("queryingInterval")[0]))
+                .setResponseTimeOk(Integer.valueOf(parameters.get("responseTimeOk")[0]))
+                .setResponseTimeWarning(Integer.valueOf(parameters.get("responseTimeWarning")[0]))
+                .setResponseTimeCritical(Integer.valueOf(parameters.get("responseTimeCritical")[0]))
+                .setExpectedHttpResponseCode(Integer.valueOf(parameters.get("expectedHttpCode")[0]))
+                .setMinExpectedResponseSize(Integer.valueOf(parameters.get("minExpectedResponseSize")[0]))
+                .setMaxExpectedResponseSize(Integer.valueOf(parameters.get("maxExpectedResponseSize")[0]));
     }
 }

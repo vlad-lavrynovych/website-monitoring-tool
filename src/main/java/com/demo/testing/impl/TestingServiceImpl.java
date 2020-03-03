@@ -1,11 +1,12 @@
-package com.demo.service.impl;
+package com.demo.testing.impl;
 
 import com.demo.data.domain.CheckResultsEntity;
 import com.demo.data.domain.ConfigEntity;
 import com.demo.data.dto.CheckResultDto;
 import com.demo.data.enums.StatusEnum;
 import com.demo.service.ConfigService;
-import com.demo.service.TestingService;
+import com.demo.service.impl.ConfigServiceImpl;
+import com.demo.testing.TestingService;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class TestingServiceImpl implements TestingService {
             size = conn.getContentLength();
             duration = System.currentTimeMillis() - startTime;
             results = getResults(config, code, duration, size);
-            System.out.println(size + " " + code + " " + duration);
+            logger.info("Finished testing url, size: {}, code: {}, duration: {}", size, code, duration);
         } catch (IOException e) {
             duration = System.currentTimeMillis() - startTime;
             logger.error("Connection url error:", e);
@@ -159,16 +160,4 @@ public class TestingServiceImpl implements TestingService {
                                                 .orElse(null)))).getValue();
     }
 
-
-//    public static void main(String[] args) {
-//        TestingServiceImpl t = new TestingServiceImpl();
-//        t.performCheck(new ConfigEntity().setUrl("https://www.wikipedia.org/")
-//                .setQueryingInterval(2000)
-//                .setResponseTimeOk(2000)
-//                .setResponseTimeWarning(3000)
-//                .setResponseTimeCritical(4000)
-//                .setExpectedHttpResponseCode(200)
-//                .setMinExpectedResponseSize(1000)
-//                .setMaxExpectedResponseSize(10000));
-//    };
 }

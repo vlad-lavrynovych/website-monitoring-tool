@@ -4,7 +4,6 @@ import com.demo.data.domain.CheckResultsEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -29,24 +28,24 @@ class CheckResultsRepositoryImplTest {
 
     @Test
     void shouldPassWhenSavedRetrievedAndDeletedSuccessfully() {
-        CheckResultsEntity conf = checkResultsRepository.save(checkResultsEntity.setId(1L)).orElse(null);
-        assertNotNull(conf);
-        assertTrue(checkResultsRepository.findById(conf.getId()).isPresent());
-        checkResultsRepository.delete(conf.getId());
-        assertFalse(checkResultsRepository.findById(conf.getId()).isPresent());
+        CheckResultsEntity result = checkResultsRepository.save(checkResultsEntity.setId(1L)).orElse(null);
+        assertNotNull(result);
+        assertTrue(checkResultsRepository.findById(result.getId()).isPresent());
+        checkResultsRepository.delete(result.getId());
+        assertFalse(checkResultsRepository.findById(result.getId()).isPresent());
     }
 
     @Test
     void shouldPassWhenUpdateMonitoringStatusSuccessfully() {
-        CheckResultsEntity conf = checkResultsRepository.save(checkResultsEntity).get();
-        checkResultsRepository.updateMonitoringStatus(conf.getId(), false);
-        assertFalse(checkResultsRepository.findById(conf.getId()).get().isMonitored());
-        checkResultsRepository.delete(conf.getId());
+        CheckResultsEntity result = checkResultsRepository.save(checkResultsEntity).get();
+        checkResultsRepository.updateMonitoringStatus(result.getId(), false);
+        assertFalse(checkResultsRepository.findById(result.getId()).get().isMonitored());
+        checkResultsRepository.delete(result.getId());
     }
 
     @Test
     void shouldPassWhenAddedAndSelectedAllResultsSuccessfully() {
-        CheckResultsEntity conf1 = checkResultsRepository.save(new CheckResultsEntity()
+        CheckResultsEntity result1 = checkResultsRepository.save(new CheckResultsEntity()
                 .setId(1L)
                 .setStatus("WARNING")
                 .setUrl("localhost:8080/")
@@ -56,7 +55,7 @@ class CheckResultsRepositoryImplTest {
                 .setDetails("403")
                 .setResponseSize(1000)
                 .setResponseCode(10000)).get();
-        CheckResultsEntity conf2 = checkResultsRepository.save(new CheckResultsEntity()
+        CheckResultsEntity result2 = checkResultsRepository.save(new CheckResultsEntity()
                 .setId(2L)
                 .setStatus("WARNING")
                 .setUrl("localhost:8080/")
@@ -66,7 +65,7 @@ class CheckResultsRepositoryImplTest {
                 .setDetails("403")
                 .setResponseSize(1000)
                 .setResponseCode(10000)).get();
-        CheckResultsEntity conf3 = checkResultsRepository.save(new CheckResultsEntity()
+        CheckResultsEntity result3 = checkResultsRepository.save(new CheckResultsEntity()
                 .setId(3L)
                 .setStatus("WARNING")
                 .setUrl("localhost:8080/")
@@ -77,10 +76,11 @@ class CheckResultsRepositoryImplTest {
                 .setResponseSize(1000)
                 .setResponseCode(10000)).get();
         List<CheckResultsEntity> actual = checkResultsRepository.findAll();
-        List<CheckResultsEntity> expected = Arrays.asList(conf1, conf2, conf3);
-        assertEquals(expected, actual);
-        checkResultsRepository.delete(conf1.getId());
-        checkResultsRepository.delete(conf2.getId());
-        checkResultsRepository.delete(conf3.getId());
+        assertTrue(actual.contains(result1));
+        assertTrue(actual.contains(result2));
+        assertTrue(actual.contains(result3));
+        checkResultsRepository.delete(result1.getId());
+        checkResultsRepository.delete(result2.getId());
+        checkResultsRepository.delete(result3.getId());
     }
 }

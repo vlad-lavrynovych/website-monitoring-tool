@@ -1,4 +1,4 @@
-package com.demo.service.impl;
+package com.demo.testing.impl;
 
 public class Timer extends java.util.Timer {
     private long configId;
