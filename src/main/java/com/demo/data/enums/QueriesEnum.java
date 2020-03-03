@@ -29,7 +29,7 @@ public enum QueriesEnum {
     SELECT_ALL_RESULTS("select id ,url, status," +
             "response_code, response_size, " +
             "details, monitored, last_check, duration, " +
-            " monitored from check_results;"),
+            " monitored from check_results order by check_results.id;"),
     SELECT_RESULT__BY_ID("select id ,url, status," +
             "response_code, response_size, " +
             "details, monitored, last_check, duration, " +

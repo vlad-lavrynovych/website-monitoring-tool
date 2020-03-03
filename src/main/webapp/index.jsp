@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <LINK REL="StyleSheet" HREF="<%=request.getContextPath()%>/css/bootstrap.css" TYPE="text/css">
-    <meta http-equiv="REFRESH" content="40;url=/app/app">
+    <meta http-equiv="REFRESH" content="40;url=/app/update">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -53,12 +53,15 @@
         </thead>
         <%
             List<CheckResultsEntity> data = (List<CheckResultsEntity>) request.getSession().getAttribute("data");
+            if (data == null) {
+                response.sendRedirect("/app/update");
+            }
             if (data != null && !data.isEmpty()) {
-                if (data.stream().anyMatch(s -> s.getStatus().equals("CRITICAL"))) {
+                if (data.stream().anyMatch(s -> s.getStatus().equals("CRITICAL") && s.isMonitored())) {
         %>
         <script>soundCritical()</script>
         <%
-        } else if (data.stream().anyMatch(s -> s.getStatus().equals("WARNING"))) {
+        } else if (data.stream().anyMatch(s -> s.getStatus().equals("WARNING") && s.isMonitored())) {
         %>
         <script>soundWarning()</script>
         <%
