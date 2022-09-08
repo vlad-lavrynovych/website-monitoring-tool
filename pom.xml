@@ -19,7 +19,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <jsp.version>2.3.1</jsp.version>
         <servlets.version>3.0.1</servlets.version>
-        <postgres.driver.version>42.2.10</postgres.driver.version>
+        <postgres.driver.version>42.4.1</postgres.driver.version>
         <slf4j.version>1.7.30</slf4j.version>
         <dbcp.version>1.2.2</dbcp.version>
         <junit.version>5.4.0</junit.version>
